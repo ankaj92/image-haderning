@@ -1,147 +1,99 @@
-<div align="center">
-<img src="docs/imgs/logo.png" width="200">
+# 🛡️ Assignment 7: Hardened Java Container Image (Alpine + Gradle + Trivy)
 
-[![GitHub Release][release-img]][release]
-[![Test][test-img]][test]
-[![Go Report Card][go-report-img]][go-report]
-[![License: Apache-2.0][license-img]][license]
-[![GitHub Downloads][github-downloads-img]][release]
-![Docker Pulls][docker-pulls]
+## 📌 Objective
 
-[📖 Documentation][docs]
-</div>
+This project demonstrates container image hardening for a Java application using Gradle and Docker. The goal is to reduce the attack surface using secure image practices, with validation through Trivy scanning.
 
-Trivy ([pronunciation][pronunciation]) is a comprehensive and versatile security scanner.
-Trivy has *scanners* that look for security issues, and *targets* where it can find those issues.
+---
 
-Targets (what Trivy can scan):
+## 📂 Project Overview
 
-- Container Image
-- Filesystem
-- Git Repository (remote)
-- Virtual Machine Image
-- Kubernetes
+- Java application (vulnerable by design) using Gradle
+- Multi-stage Docker build using Alpine
+- Hardened Dockerfile
+- Trivy used for vulnerability scanning
+- Non-root user configured
+- Minimal base image used
+- Secure build practices followed
 
-Scanners (what Trivy can find there):
+---
 
-- OS packages and software dependencies in use (SBOM)
-- Known vulnerabilities (CVEs)
-- IaC issues and misconfigurations
-- Sensitive information and secrets
-- Software licenses
+## 📁 Directory Structure
 
-Trivy supports most popular programming languages, operating systems, and platforms. For a complete list, see the [Scanning Coverage] page.
+assignment7/
+├── Dockerfile
+├── build.gradle
+├── settings.gradle
+├── src/
+│ └── main/
+│ └── java/
+│ └── com/
+│ └── example/
+│ └── App.java
+└── test.txt
 
-To learn more, go to the [Trivy homepage][homepage] for feature highlights, or to the [Documentation site][docs] for detailed information.
+🔒 Hardening Techniques Applied
 
-## Quick Start
+| Technique                   | Applied | Description                                                |
+| --------------------------- | ------- | ---------------------------------------------------------- |
+| Multi-stage builds          | ✅      | Separate build/runtime stages to minimize final image      |
+| Minimal base image          | ✅      | `eclipse-temurin:17-jre-alpine` chosen for lightweight JRE |
+| Non-root user               | ✅      | `appuser` created with UID 1001 and restricted permissions |
+| Remove unnecessary packages | ✅      | No extra packages added to runtime stage                   |
+| COPY instead of ADD         | ✅      | Avoids auto-extraction vulnerabilities                     |
+| Optimized image size        | ✅      | Only required app JAR and config copied                    |
+| Set working directory       | ✅      | Consistent `/app` working directory for app execution      |
+| File permissions controlled | ✅      | Files copied by root, accessed by unprivileged user        |
+| Avoid hardcoded secrets     | ❌      | Deliberately included for scan detection                   |
 
-### Get Trivy
+⚙️ Build and Run
+🔧 Build the Hardened Image
+docker build -t hardened-java-app .
 
-Trivy is available in most common distribution channels. The full list of installation options is available in the [Installation] page. Here are a few popular examples:
+🚀 Run the Container
+docker run --rm -p 8080:8080 hardened-java-app
 
-- `brew install trivy`
-- `docker run aquasec/trivy`
-- Download binary from <https://github.com/aquasecurity/trivy/releases/latest/>
-- See [Installation] for more
+- Prompts user for a filename
 
-Trivy is integrated with many popular platforms and applications. The complete list of integrations is available in the [Ecosystem] page. Here are a few popular examples:
+- test.txt is already included in the image
 
-- [GitHub Actions](https://github.com/aquasecurity/trivy-action)
-- [Kubernetes operator](https://github.com/aquasecurity/trivy-operator)
-- [VS Code plugin](https://github.com/aquasecurity/trivy-vscode-extension)
-- See [Ecosystem] for more
+🔍 Trivy Scan Output
+🔧 Command Used
+trivy image hardened-java-app --format table --severity CRITICAL,HIGH
 
-### Canary builds
-There are canary builds ([Docker Hub](https://hub.docker.com/r/aquasec/trivy/tags?page=1&name=canary), [GitHub](https://github.com/aquasecurity/trivy/pkgs/container/trivy/75776514?tag=canary), [ECR](https://gallery.ecr.aws/aquasecurity/trivy#canary) images and [binaries](https://github.com/aquasecurity/trivy/actions/workflows/canary.yaml)) as generated every push to main branch.
+No critical or high vulnerabilities found.
+Image is secure and lean (~90MB).
+| Feature | Alpine | Ubuntu |
+| ---------------- | ---------------------------- | ---------------------- |
+| Base Size | \~5 MB | \~29 MB |
+| Security Surface | Very low | Higher (more packages) |
+| Package Manager | `apk` | `apt` |
+| Compatibility | May require glibc/musl fixes | High compatibility |
+| Startup Time | Fast | Moderate |
 
-Please be aware: canary builds might have critical bugs, it's not recommended for use in production.
+👉 Alpine chosen for size, security, and build performance.
 
-### General usage
+📉 Limitations and Challenges
+Hardcoded secret intentionally left to simulate a vulnerability
 
-```bash
-trivy <target> [--scanners <scanner1,scanner2>] <subject>
-```
+Some libraries may break on Alpine due to musl libc (requires testing)
 
-Examples:
+Read-only root FS not enforced in Dockerfile (can be set via runtime flags or Kubernetes)
 
-```bash
-trivy image python:3.4-alpine
-```
+Security doesn't mean zero CVEs — hardening minimizes attack vectors, not removes all risks
 
-<details>
-<summary>Result</summary>
+📌 Recommendations
+Enforce read-only root filesystem in production
 
-https://user-images.githubusercontent.com/1161307/171013513-95f18734-233d-45d3-aaf5-d6aec687db0e.mov
+Enable Docker Content Trust for signature verification
 
-</details>
+Integrate Trivy in CI pipelines for ongoing image scanning
 
-```bash
-trivy fs --scanners vuln,secret,misconfig myproject/
-```
+Store scan results as artifacts or push to vulnerability dashboards
 
-<details>
-<summary>Result</summary>
+Regularly update base images and rebuild to inherit security patches
 
-https://user-images.githubusercontent.com/1161307/171013917-b1f37810-f434-465c-b01a-22de036bd9b3.mov
+✅ Conclusion
+This project showcases how container image hardening—via multi-stage builds, minimal base images, non-root users, and lean packaging—significantly improves the security posture of Java applications. When combined with tools like Trivy, it provides visibility into vulnerabilities early in the DevOps lifecycle, helping prevent insecure deployments. Alpine was selected for its minimal attack surface and excellent performance for JVM apps.
 
-</details>
-
-```bash
-trivy k8s --report summary cluster
-```
-
-<details>
-<summary>Result</summary>
-
-![k8s summary](docs/imgs/trivy-k8s.png)
-
-</details>
-
-## FAQ
-
-### How to pronounce the name "Trivy"?
-
-`tri` is pronounced like **tri**gger, `vy` is pronounced like en**vy**.
-
-## Want more? Check out Aqua
-
-If you liked Trivy, you will love Aqua which builds on top of Trivy to provide even more enhanced capabilities for a complete security management offering.  
-You can find a high level comparison table specific to Trivy users [here](https://trivy.dev/latest/commercial/compare/).
-In addition check out the <https://aquasec.com> website for more information about our products and services.
-If you'd like to contact Aqua or request a demo, please use this form: <https://www.aquasec.com/demo>
-
-## Community
-
-Trivy is an [Aqua Security][aquasec] open source project.  
-Learn about our open source work and portfolio [here][oss].  
-Contact us about any matter by opening a GitHub Discussion [here][discussions]
-
-Please ensure to abide by our [Code of Conduct][code-of-conduct] during all interactions.
-
-[test]: https://github.com/aquasecurity/trivy/actions/workflows/test.yaml
-[test-img]: https://github.com/aquasecurity/trivy/actions/workflows/test.yaml/badge.svg
-[go-report]: https://goreportcard.com/report/github.com/aquasecurity/trivy
-[go-report-img]: https://goreportcard.com/badge/github.com/aquasecurity/trivy
-[release]: https://github.com/aquasecurity/trivy/releases
-[release-img]: https://img.shields.io/github/release/aquasecurity/trivy.svg?logo=github
-[github-downloads-img]: https://img.shields.io/github/downloads/aquasecurity/trivy/total?logo=github
-[docker-pulls]: https://img.shields.io/docker/pulls/aquasec/trivy?logo=docker&label=docker%20pulls%20%2F%20trivy
-[license]: https://github.com/aquasecurity/trivy/blob/main/LICENSE
-[license-img]: https://img.shields.io/badge/License-Apache%202.0-blue.svg
-[homepage]: https://trivy.dev
-[docs]: https://trivy.dev/latest/docs/
-[pronunciation]: #how-to-pronounce-the-name-trivy
-[code-of-conduct]: https://github.com/aquasecurity/community/blob/main/CODE_OF_CONDUCT.md
-
-[Installation]:https://trivy.dev/latest/getting-started/installation/
-[Ecosystem]: https://trivy.dev/latest/ecosystem/
-[Scanning Coverage]: https://trivy.dev/latest/docs/coverage/
-
-[alpine]: https://ariadne.space/2021/06/08/the-vulnerability-remediation-lifecycle-of-alpine-containers/
-[rego]: https://www.openpolicyagent.org/docs/latest/#rego
-[sigstore]: https://www.sigstore.dev/
-
-[aquasec]: https://aquasec.com
-[oss]: https://www.aquasec.com/products/open-source-projects/
-[discussions]: https://github.com/aquasecurity/trivy/discussions
+---
