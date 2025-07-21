@@ -1,0 +1,225 @@
+{
+  "SchemaVersion": 2,
+  "CreatedAt": "2025-07-21T21:19:48.854059+05:30",
+  "ArtifactName": "hardened-java-demo",
+  "ArtifactType": "container_image",
+  "Metadata": {
+    "Size": 181719040,
+    "OS": {
+      "Family": "alpine",
+      "Name": "3.21.4"
+    },
+    "ImageID": "sha256:e207368ab2db946d1501642560cb46fd381d4c8929e1ea43e4d7953e6e402f5a",
+    "DiffIDs": [
+      "sha256:7003d23cc2176ec98ba2f8b3b4b9b5f144ef370e39bfcf6275a92b5064bc9261",
+      "sha256:6739ff8f5dd7659ae13e23a05a9aa9f4586f22c73d227cd96ca58a81d18a6c2f",
+      "sha256:328d4322427a5bd4d0a5e57506565169688501cba44245be16a963449f1ea2e9",
+      "sha256:e9c4c333f9ef8db77d80a0083d247c9a1c92c3d1c09a5cc4270fd20a055ce373",
+      "sha256:438ee18578d70d6fe67b842fd0e3ad466bddc2780f85e69c1256d6b7fb2c3472",
+      "sha256:3b16be588b882c3109a7f13a3e9423bff67d7cd1b658d71b331e6cf5a20d22a8",
+      "sha256:a26d8c26afb7b73dae1b6f4f7890ada29aeef46d9b26f4b8be0f7d22adaa9066",
+      "sha256:d35101a37d4536173bff669f00b1776a3fbfc8ca20dde55f3918f7326375922a",
+      "sha256:d3b3217bc1ec0aa9ca5ff5ece85b40b2e19913ac4a9993ea70e4dfda49955b46"
+    ],
+    "RepoTags": [
+      "hardened-java-demo:latest"
+    ],
+    "RepoDigests": [
+      "hardened-java-demo@sha256:e207368ab2db946d1501642560cb46fd381d4c8929e1ea43e4d7953e6e402f5a"
+    ],
+    "ImageConfig": {
+      "architecture": "amd64",
+      "created": "2025-07-21T15:36:33.263877442Z",
+      "history": [
+        {
+          "created": "2025-04-23T14:48:05Z",
+          "created_by": "ADD alpine-minirootfs-3.21.4-x86_64.tar.gz / # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-04-23T14:48:05Z",
+          "created_by": "CMD [\"/bin/sh\"]",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-04-23T14:48:05Z",
+          "created_by": "ENV JAVA_HOME=/opt/java/openjdk",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-04-23T14:48:05Z",
+          "created_by": "ENV PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-04-23T14:48:05Z",
+          "created_by": "ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-04-23T14:48:05Z",
+          "created_by": "RUN /bin/sh -c set -eux;     apk add --no-cache         fontconfig ttf-dejavu         gnupg         ca-certificates p11-kit-trust         musl-locales musl-locales-lang         tzdata         coreutils         openssl     ;     rm -rf /var/cache/apk/* # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-04-23T14:48:05Z",
+          "created_by": "ENV JAVA_VERSION=jdk-17.0.15+6",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-04-23T14:48:05Z",
+          "created_by": "RUN /bin/sh -c set -eux;     ARCH=\"$(apk --print-arch)\";     case \"${ARCH}\" in        x86_64)          ESUM='38c90337ca2471085f9292d24bec75413b4e56c7826ef25e150a40cc2f727e36';          BINARY_URL='https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.15%2B6/OpenJDK17U-jre_x64_alpine-linux_hotspot_17.0.15_6.tar.gz';          ;;        *)          echo \"Unsupported arch: ${ARCH}\";          exit 1;          ;;     esac;     wget -O /tmp/openjdk.tar.gz ${BINARY_URL};     wget -O /tmp/openjdk.tar.gz.sig ${BINARY_URL}.sig;     export GNUPGHOME=\"$(mktemp -d)\";     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys 3B04D753C9050D9A5D343F39843C48A565F8F04B;     gpg --batch --verify /tmp/openjdk.tar.gz.sig /tmp/openjdk.tar.gz;     rm -rf \"${GNUPGHOME}\" /tmp/openjdk.tar.gz.sig;     echo \"${ESUM} */tmp/openjdk.tar.gz\" | sha256sum -c -;     mkdir -p \"$JAVA_HOME\";     tar --extract         --file /tmp/openjdk.tar.gz         --directory \"$JAVA_HOME\"         --strip-components 1         --no-same-owner     ;     rm -f /tmp/openjdk.tar.gz; # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-04-23T14:48:05Z",
+          "created_by": "RUN /bin/sh -c set -eux;     echo \"Verifying install ...\";     echo \"java --version\"; java --version;     echo \"Complete.\" # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-04-23T14:48:05Z",
+          "created_by": "COPY --chmod=755 entrypoint.sh /__cacert_entrypoint.sh # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-04-23T14:48:05Z",
+          "created_by": "ENTRYPOINT [\"/__cacert_entrypoint.sh\"]",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-07-21T15:20:54Z",
+          "created_by": "WORKDIR /app",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-07-21T15:36:32Z",
+          "created_by": "COPY /app/build/libs/*.jar /app/app.jar # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-07-21T15:36:33Z",
+          "created_by": "RUN /bin/sh -c addgroup -g 1001 appgroup \u0026\u0026 adduser -D -u 1001 -G appgroup appuser # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-07-21T15:36:33Z",
+          "created_by": "USER appuser:appgroup",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-07-21T15:36:33Z",
+          "created_by": "EXPOSE map[8080/tcp:{}]",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-07-21T15:36:33Z",
+          "created_by": "COPY test.txt /app/test.txt # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-07-21T15:36:33Z",
+          "created_by": "ENTRYPOINT [\"java\" \"-jar\" \"/app/app.jar\"]",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        }
+      ],
+      "os": "linux",
+      "rootfs": {
+        "type": "layers",
+        "diff_ids": [
+          "sha256:7003d23cc2176ec98ba2f8b3b4b9b5f144ef370e39bfcf6275a92b5064bc9261",
+          "sha256:6739ff8f5dd7659ae13e23a05a9aa9f4586f22c73d227cd96ca58a81d18a6c2f",
+          "sha256:328d4322427a5bd4d0a5e57506565169688501cba44245be16a963449f1ea2e9",
+          "sha256:e9c4c333f9ef8db77d80a0083d247c9a1c92c3d1c09a5cc4270fd20a055ce373",
+          "sha256:438ee18578d70d6fe67b842fd0e3ad466bddc2780f85e69c1256d6b7fb2c3472",
+          "sha256:3b16be588b882c3109a7f13a3e9423bff67d7cd1b658d71b331e6cf5a20d22a8",
+          "sha256:a26d8c26afb7b73dae1b6f4f7890ada29aeef46d9b26f4b8be0f7d22adaa9066",
+          "sha256:d35101a37d4536173bff669f00b1776a3fbfc8ca20dde55f3918f7326375922a",
+          "sha256:d3b3217bc1ec0aa9ca5ff5ece85b40b2e19913ac4a9993ea70e4dfda49955b46"
+        ]
+      },
+      "config": {
+        "Entrypoint": [
+          "java",
+          "-jar",
+          "/app/app.jar"
+        ],
+        "Env": [
+          "PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+          "JAVA_HOME=/opt/java/openjdk",
+          "LANG=en_US.UTF-8",
+          "LANGUAGE=en_US:en",
+          "LC_ALL=en_US.UTF-8",
+          "JAVA_VERSION=jdk-17.0.15+6"
+        ],
+        "User": "appuser:appgroup",
+        "WorkingDir": "/app",
+        "ExposedPorts": {
+          "8080/tcp": {}
+        }
+      }
+    },
+    "Layers": [
+      {
+        "Size": 8111104,
+        "Digest": "sha256:0368fd46e3c6d237d81390ff086f93aee216df5cfa814041a491453fb0932a12",
+        "DiffID": "sha256:7003d23cc2176ec98ba2f8b3b4b9b5f144ef370e39bfcf6275a92b5064bc9261"
+      },
+      {
+        "Size": 33974784,
+        "Digest": "sha256:78a64b6e9cbceb97623872fe9c892d2bebf2817d26f290c75ea40e66920888f8",
+        "DiffID": "sha256:6739ff8f5dd7659ae13e23a05a9aa9f4586f22c73d227cd96ca58a81d18a6c2f"
+      },
+      {
+        "Size": 139604992,
+        "Digest": "sha256:ef0ba91d7280812f75a3b313b311e60982d193db023ba15fa1b24dbcc92ae764",
+        "DiffID": "sha256:328d4322427a5bd4d0a5e57506565169688501cba44245be16a963449f1ea2e9"
+      },
+      {
+        "Size": 2048,
+        "Digest": "sha256:a1e961a70542ae8a6ed37edf16f7549e738832a8b879d3b6b9a50752156b195f",
+        "DiffID": "sha256:e9c4c333f9ef8db77d80a0083d247c9a1c92c3d1c09a5cc4270fd20a055ce373"
+      },
+      {
+        "Size": 7168,
+        "Digest": "sha256:058186639a0e13695cf575d386b561d639c712f017056171d7015506d2e28e41",
+        "DiffID": "sha256:438ee18578d70d6fe67b842fd0e3ad466bddc2780f85e69c1256d6b7fb2c3472"
+      },
+      {
+        "Size": 1536,
+        "Digest": "sha256:7b3919bae2b6922eee71039b66a3bfb4c952135f52df6ee8243ab90b1e1aedb6",
+        "DiffID": "sha256:3b16be588b882c3109a7f13a3e9423bff67d7cd1b658d71b331e6cf5a20d22a8"
+      },
+      {
+        "Size": 4096,
+        "Digest": "sha256:86906e554ab780678692f12939931f9683cbc77426f8de86b96dffc701a29704",
+        "DiffID": "sha256:a26d8c26afb7b73dae1b6f4f7890ada29aeef46d9b26f4b8be0f7d22adaa9066"
+      },
+      {
+        "Size": 10752,
+        "Digest": "sha256:4ebf92c2e80e4d85758b9f58575f8327587599dece43082f23badc473a3183c0",
+        "DiffID": "sha256:d35101a37d4536173bff669f00b1776a3fbfc8ca20dde55f3918f7326375922a"
+      },
+      {
+        "Size": 2560,
+        "Digest": "sha256:2b4eaa4b5c22a1df521c2f16313f2d38761e2f56c61999a1e720b4a4114e3ff8",
+        "DiffID": "sha256:d3b3217bc1ec0aa9ca5ff5ece85b40b2e19913ac4a9993ea70e4dfda49955b46"
+      }
+    ]
+  },
+  "Results": [
+    {
+      "Target": "hardened-java-demo (alpine 3.21.4)",
+      "Class": "os-pkgs",
+      "Type": "alpine"
+    }
+  ]
+}
